@@ -2,8 +2,10 @@ const connectToMongo = require('./db');
 const express = require('express')
 connectToMongo();
 
+var cors = require('cors')
+var app = express()
 
-const app = express()
+app.use(cors())
 const port = 4000
 
 app.use(express.json())
@@ -12,5 +14,5 @@ app.use('/api/notes',require('./routes/notes'))
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`inotebook backned app listening on port ${port}`)
 })
