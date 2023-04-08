@@ -68,10 +68,11 @@ router.post(
     body("password", "Mandatory field").exists(),
   ],
   async (req, res) => {
+    let success = false
     const errors = validationResult(req);
     // If there are errors in the request, return Bad request and the errors
     if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success, errors: errors.array() });
 
     const { email, password } = req.body;
     try {
@@ -79,7 +80,7 @@ router.post(
       if (!user) {
         return res
           .status(400)
-          .json({ error: "Please try again with the correct credentials" });
+          .json({ success, error: "Please try again with the correct credentials" });
       }
 
       const passwordCompare = await bcrypt.compare(password, user.password);
@@ -96,7 +97,8 @@ router.post(
         },
       };
       const authtoken = jwt.sign(payload, JWT_SECRET);
-      res.json({ authtoken });
+      success = true
+      res.json({ success , authtoken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server error occured");
@@ -107,9 +109,9 @@ router.post(
 //ROUTE 3 :Get Logged in User Details : POST "/api/auth/getuser".Login required
 router.post("/getuser", fetchuser, async (req, res) => {
   try {
-    const userId = req.user.id
+    const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
-    res.send(user)
+    res.send(user);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server error occured");
