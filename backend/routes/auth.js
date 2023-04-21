@@ -20,18 +20,19 @@ router.post(
     body("name", "Enter a name with atleast 3 characters").isLength({ min: 3 }),
   ],
   async (req, res) => {
+    let success = false
     const errors = validationResult(req);
 
     // If there are errors in the request, return Bad request and the errors
     if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     try {
       //Check if user exists in database
       let user = await User.findOne({ email: req.body.email });
       if (user) {
         res
           .status(400)
-          .json({ error: "Sorry a User wiht the email already exists" });
+          .json({ success, error: "Sorry a User wiht the email already exists" });
       }
       const salt = await bcrypt.genSalt(10);
       const secPassword = await bcrypt.hash(req.body.password, salt);
@@ -51,7 +52,9 @@ router.post(
       const authtoken = jwt.sign(data, JWT_SECRET);
       console.log(authtoken);
 
-      res.json({ authtoken });
+
+      success = true
+      res.json({ success, authtoken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server error occured");

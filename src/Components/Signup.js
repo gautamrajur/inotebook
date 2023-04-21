@@ -1,20 +1,35 @@
 import React, {useState} from 'react'
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
 
-  const [credentials ,setCredentials] = useState({email: "", password: ""})
+  const [credentials ,setCredentials] = useState({ name:"", email: "", password: "", cpassword:""})
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-
-    
     e.preventDefault();
-    const response = await fetch("localhost:4000/api/auth/login", {
+
+    const {name, email,password} = credentials;
+
+    const response = await fetch("http://localhost:4000/api/auth/createuser", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify({name, email,password})
     });
-    const json = await response.json();
+      const json = await response.json();
+      console.log(json)
+   
+      if(json.success){
+             //save the auth token and redirect
+            localStorage.setItem('token', json.authtoken);
+            navigate("/")
+      }
+      else{
+        alert("Sorry a User wiht the email already exists");
+      }
+   
   }
 
   const onChange = (e) => {
@@ -23,7 +38,7 @@ const Signup = () => {
 
   return (
     <div>
-      <form className='container my-3'>
+      <form onSubmit={handleSubmit} className='container my-3'>
         <div className="form-group my-3">
           <label htmlFor="name">Name</label>
           <input type="text" className="form-control" id="name" name="name" onChange={onChange} aria-describedby="emailHelp" placeholder="Enter email" />
