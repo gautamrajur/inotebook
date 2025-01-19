@@ -103,22 +103,6 @@ JWT_SECRET=<your_jwt_secret>
 - **PUT** `/api/notes/updatenote/:id`: Update an existing note
 - **DELETE** `/api/notes/deletenote/:id`: Delete a note
 
-## npm Commands
-
-### Frontend Commands
-
-- `npm start`: Runs the React app in development mode (on `http://localhost:3000`).
-- `npm run build`: Builds the React app for production.
-- `npm install`: Installs the required dependencies for the React application.
-- `npm test`: Runs the test suite for the React app.
-
-### Backend Commands
-
-- `npm run dev`: Starts the backend server with live reloading (using `nodemon`).
-- `npm install`: Installs the required dependencies for the backend server.
-- `npm run start`: Starts the backend server (without live reloading).
-- `npm test`: Run the test suite for the backend.
-
 ## Contributing
 
 1. Fork this repository.
